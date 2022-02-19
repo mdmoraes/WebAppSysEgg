@@ -9,23 +9,22 @@ using WebAppSysEgg.Models;
 
 namespace WebAppSysEgg.Controllers
 {
-    public class PedidoController : Controller
+    public class ClienteController : Controller
     {
         private readonly AppDbContext _context;
 
-        public PedidoController(AppDbContext context)
+        public ClienteController(AppDbContext context)
         {
             _context = context;
         }
 
-        // GET: Pedido
+        // GET: Cliente
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Pedidos.Include(p => p.Cliente);
-            return View(await appDbContext.ToListAsync());
+            return View(await _context.Clientes.ToListAsync());
         }
 
-        // GET: Pedido/Details/5
+        // GET: Cliente/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,42 +32,39 @@ namespace WebAppSysEgg.Controllers
                 return NotFound();
             }
 
-            var pedido = await _context.Pedidos
-                .Include(p => p.Cliente)
-                .FirstOrDefaultAsync(m => m.PedidoId == id);
-            if (pedido == null)
+            var cliente = await _context.Clientes
+                .FirstOrDefaultAsync(m => m.ClienteId == id);
+            if (cliente == null)
             {
                 return NotFound();
             }
 
-            return View(pedido);
+            return View(cliente);
         }
 
-        // GET: Pedido/Create
+        // GET: Cliente/Create
         public IActionResult Create()
         {
-            ViewData["ClienteId"] = new SelectList(_context.Clientes, "ClienteId", "Endereco");
             return View();
         }
 
-        // POST: Pedido/Create
+        // POST: Cliente/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PedidoId,ClienteId,DataPedido,TotalPedido")] Pedido pedido)
+        public async Task<IActionResult> Create([Bind("ClienteId,Nome,Endereco,DataCadastro")] Cliente cliente)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(pedido);
+                _context.Add(cliente);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClienteId"] = new SelectList(_context.Clientes, "ClienteId", "Endereco", pedido.ClienteId);
-            return View(pedido);
+            return View(cliente);
         }
 
-        // GET: Pedido/Edit/5
+        // GET: Cliente/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -76,23 +72,22 @@ namespace WebAppSysEgg.Controllers
                 return NotFound();
             }
 
-            var pedido = await _context.Pedidos.FindAsync(id);
-            if (pedido == null)
+            var cliente = await _context.Clientes.FindAsync(id);
+            if (cliente == null)
             {
                 return NotFound();
             }
-            ViewData["ClienteId"] = new SelectList(_context.Clientes, "ClienteId", "Endereco", pedido.ClienteId);
-            return View(pedido);
+            return View(cliente);
         }
 
-        // POST: Pedido/Edit/5
+        // POST: Cliente/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("PedidoId,ClienteId,DataPedido,TotalPedido")] Pedido pedido)
+        public async Task<IActionResult> Edit(int id, [Bind("ClienteId,Nome,Endereco,DataCadastro")] Cliente cliente)
         {
-            if (id != pedido.PedidoId)
+            if (id != cliente.ClienteId)
             {
                 return NotFound();
             }
@@ -101,12 +96,12 @@ namespace WebAppSysEgg.Controllers
             {
                 try
                 {
-                    _context.Update(pedido);
+                    _context.Update(cliente);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PedidoExists(pedido.PedidoId))
+                    if (!ClienteExists(cliente.ClienteId))
                     {
                         return NotFound();
                     }
@@ -117,11 +112,10 @@ namespace WebAppSysEgg.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClienteId"] = new SelectList(_context.Clientes, "ClienteId", "Endereco", pedido.ClienteId);
-            return View(pedido);
+            return View(cliente);
         }
 
-        // GET: Pedido/Delete/5
+        // GET: Cliente/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -129,31 +123,30 @@ namespace WebAppSysEgg.Controllers
                 return NotFound();
             }
 
-            var pedido = await _context.Pedidos
-                .Include(p => p.Cliente)
-                .FirstOrDefaultAsync(m => m.PedidoId == id);
-            if (pedido == null)
+            var cliente = await _context.Clientes
+                .FirstOrDefaultAsync(m => m.ClienteId == id);
+            if (cliente == null)
             {
                 return NotFound();
             }
 
-            return View(pedido);
+            return View(cliente);
         }
 
-        // POST: Pedido/Delete/5
+        // POST: Cliente/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var pedido = await _context.Pedidos.FindAsync(id);
-            _context.Pedidos.Remove(pedido);
+            var cliente = await _context.Clientes.FindAsync(id);
+            _context.Clientes.Remove(cliente);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PedidoExists(int id)
+        private bool ClienteExists(int id)
         {
-            return _context.Pedidos.Any(e => e.PedidoId == id);
+            return _context.Clientes.Any(e => e.ClienteId == id);
         }
     }
 }

@@ -9,22 +9,22 @@ using WebAppSysEgg.Models;
 
 namespace WebAppSysEgg.Controllers
 {
-    public class ClientesController : Controller
+    public class ProdutoController : Controller
     {
         private readonly AppDbContext _context;
 
-        public ClientesController(AppDbContext context)
+        public ProdutoController(AppDbContext context)
         {
             _context = context;
         }
 
-        // GET: Clientes
+        // GET: Produto
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Clientes.ToListAsync());
+            return View(await _context.Produtos.ToListAsync());
         }
 
-        // GET: Clientes/Details/5
+        // GET: Produto/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -32,39 +32,39 @@ namespace WebAppSysEgg.Controllers
                 return NotFound();
             }
 
-            var cliente = await _context.Clientes
-                .FirstOrDefaultAsync(m => m.ClienteId == id);
-            if (cliente == null)
+            var produto = await _context.Produtos
+                .FirstOrDefaultAsync(m => m.ProdutoId == id);
+            if (produto == null)
             {
                 return NotFound();
             }
 
-            return View(cliente);
+            return View(produto);
         }
 
-        // GET: Clientes/Create
+        // GET: Produto/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Clientes/Create
+        // POST: Produto/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ClienteId,Nome,Endereco")] Cliente cliente)
+        public async Task<IActionResult> Create([Bind("ProdutoId,Descricao,Valor,QuantidadeMinima")] Produto produto)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(cliente);
+                _context.Add(produto);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(cliente);
+            return View(produto);
         }
 
-        // GET: Clientes/Edit/5
+        // GET: Produto/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -72,22 +72,22 @@ namespace WebAppSysEgg.Controllers
                 return NotFound();
             }
 
-            var cliente = await _context.Clientes.FindAsync(id);
-            if (cliente == null)
+            var produto = await _context.Produtos.FindAsync(id);
+            if (produto == null)
             {
                 return NotFound();
             }
-            return View(cliente);
+            return View(produto);
         }
 
-        // POST: Clientes/Edit/5
+        // POST: Produto/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ClienteId,Nome,Endereco")] Cliente cliente)
+        public async Task<IActionResult> Edit(int id, [Bind("ProdutoId,Descricao,Valor,QuantidadeMinima")] Produto produto)
         {
-            if (id != cliente.ClienteId)
+            if (id != produto.ProdutoId)
             {
                 return NotFound();
             }
@@ -96,12 +96,12 @@ namespace WebAppSysEgg.Controllers
             {
                 try
                 {
-                    _context.Update(cliente);
+                    _context.Update(produto);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ClienteExists(cliente.ClienteId))
+                    if (!ProdutoExists(produto.ProdutoId))
                     {
                         return NotFound();
                     }
@@ -112,10 +112,10 @@ namespace WebAppSysEgg.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(cliente);
+            return View(produto);
         }
 
-        // GET: Clientes/Delete/5
+        // GET: Produto/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -123,30 +123,30 @@ namespace WebAppSysEgg.Controllers
                 return NotFound();
             }
 
-            var cliente = await _context.Clientes
-                .FirstOrDefaultAsync(m => m.ClienteId == id);
-            if (cliente == null)
+            var produto = await _context.Produtos
+                .FirstOrDefaultAsync(m => m.ProdutoId == id);
+            if (produto == null)
             {
                 return NotFound();
             }
 
-            return View(cliente);
+            return View(produto);
         }
 
-        // POST: Clientes/Delete/5
+        // POST: Produto/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var cliente = await _context.Clientes.FindAsync(id);
-            _context.Clientes.Remove(cliente);
+            var produto = await _context.Produtos.FindAsync(id);
+            _context.Produtos.Remove(produto);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ClienteExists(int id)
+        private bool ProdutoExists(int id)
         {
-            return _context.Clientes.Any(e => e.ClienteId == id);
+            return _context.Produtos.Any(e => e.ProdutoId == id);
         }
     }
 }

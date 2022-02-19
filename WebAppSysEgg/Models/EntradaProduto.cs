@@ -8,10 +8,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace WebAppSysEgg.Models
 {
-    [Keyless]
     [Table("EntradaProduto")]
     public partial class EntradaProduto
     {
+        [Key]
+        [Required]  
+        public int EntradaProdutoId { get; set;}
         public int ProdutoId { get; set; }
         public int Quantidade { get; set; }
         [Column(TypeName = "money")]

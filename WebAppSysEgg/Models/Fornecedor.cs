@@ -16,5 +16,6 @@ namespace WebAppSysEgg.Models
         [Required]
         [StringLength(100)]
         public string FornecedorNome { get; set; }
+        public DateTime DataCadastro { get; set; }
     }
 }

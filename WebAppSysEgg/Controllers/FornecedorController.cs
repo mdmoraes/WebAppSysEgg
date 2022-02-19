@@ -9,23 +9,22 @@ using WebAppSysEgg.Models;
 
 namespace WebAppSysEgg.Controllers
 {
-    public class PedidoController : Controller
+    public class FornecedorController : Controller
     {
         private readonly AppDbContext _context;
 
-        public PedidoController(AppDbContext context)
+        public FornecedorController(AppDbContext context)
         {
             _context = context;
         }
 
-        // GET: Pedido
+        // GET: Fornecedor
         public async Task<IActionResult> Index()
         {
-            var appDbContext = _context.Pedidos.Include(p => p.Cliente);
-            return View(await appDbContext.ToListAsync());
+            return View(await _context.Fornecedors.ToListAsync());
         }
 
-        // GET: Pedido/Details/5
+        // GET: Fornecedor/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,42 +32,39 @@ namespace WebAppSysEgg.Controllers
                 return NotFound();
             }
 
-            var pedido = await _context.Pedidos
-                .Include(p => p.Cliente)
-                .FirstOrDefaultAsync(m => m.PedidoId == id);
-            if (pedido == null)
+            var fornecedor = await _context.Fornecedors
+                .FirstOrDefaultAsync(m => m.FornecedorId == id);
+            if (fornecedor == null)
             {
                 return NotFound();
             }
 
-            return View(pedido);
+            return View(fornecedor);
         }
 
-        // GET: Pedido/Create
+        // GET: Fornecedor/Create
         public IActionResult Create()
         {
-            ViewData["ClienteId"] = new SelectList(_context.Clientes, "ClienteId", "Endereco");
             return View();
         }
 
-        // POST: Pedido/Create
+        // POST: Fornecedor/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("PedidoId,ClienteId,DataPedido,TotalPedido")] Pedido pedido)
+        public async Task<IActionResult> Create([Bind("FornecedorId,FornecedorNome,DataCadastro")] Fornecedor fornecedor)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(pedido);
+                _context.Add(fornecedor);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClienteId"] = new SelectList(_context.Clientes, "ClienteId", "Endereco", pedido.ClienteId);
-            return View(pedido);
+            return View(fornecedor);
         }
 
-        // GET: Pedido/Edit/5
+        // GET: Fornecedor/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -76,23 +72,22 @@ namespace WebAppSysEgg.Controllers
                 return NotFound();
             }
 
-            var pedido = await _context.Pedidos.FindAsync(id);
-            if (pedido == null)
+            var fornecedor = await _context.Fornecedors.FindAsync(id);
+            if (fornecedor == null)
             {
                 return NotFound();
             }
-            ViewData["ClienteId"] = new SelectList(_context.Clientes, "ClienteId", "Endereco", pedido.ClienteId);
-            return View(pedido);
+            return View(fornecedor);
         }
 
-        // POST: Pedido/Edit/5
+        // POST: Fornecedor/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("PedidoId,ClienteId,DataPedido,TotalPedido")] Pedido pedido)
+        public async Task<IActionResult> Edit(int id, [Bind("FornecedorId,FornecedorNome,DataCadastro")] Fornecedor fornecedor)
         {
-            if (id != pedido.PedidoId)
+            if (id != fornecedor.FornecedorId)
             {
                 return NotFound();
             }
@@ -101,12 +96,12 @@ namespace WebAppSysEgg.Controllers
             {
                 try
                 {
-                    _context.Update(pedido);
+                    _context.Update(fornecedor);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PedidoExists(pedido.PedidoId))
+                    if (!FornecedorExists(fornecedor.FornecedorId))
                     {
                         return NotFound();
                     }
@@ -117,11 +112,10 @@ namespace WebAppSysEgg.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClienteId"] = new SelectList(_context.Clientes, "ClienteId", "Endereco", pedido.ClienteId);
-            return View(pedido);
+            return View(fornecedor);
         }
 
-        // GET: Pedido/Delete/5
+        // GET: Fornecedor/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -129,31 +123,30 @@ namespace WebAppSysEgg.Controllers
                 return NotFound();
             }
 
-            var pedido = await _context.Pedidos
-                .Include(p => p.Cliente)
-                .FirstOrDefaultAsync(m => m.PedidoId == id);
-            if (pedido == null)
+            var fornecedor = await _context.Fornecedors
+                .FirstOrDefaultAsync(m => m.FornecedorId == id);
+            if (fornecedor == null)
             {
                 return NotFound();
             }
 
-            return View(pedido);
+            return View(fornecedor);
         }
 
-        // POST: Pedido/Delete/5
+        // POST: Fornecedor/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var pedido = await _context.Pedidos.FindAsync(id);
-            _context.Pedidos.Remove(pedido);
+            var fornecedor = await _context.Fornecedors.FindAsync(id);
+            _context.Fornecedors.Remove(fornecedor);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PedidoExists(int id)
+        private bool FornecedorExists(int id)
         {
-            return _context.Pedidos.Any(e => e.PedidoId == id);
+            return _context.Fornecedors.Any(e => e.FornecedorId == id);
         }
     }
 }

@@ -24,6 +24,7 @@ namespace WebAppSysEgg.Models
         [Required]
         [StringLength(150)]
         public string Endereco { get; set; }
+        public DateTime DataCadastro { get; set; }
 
         [InverseProperty(nameof(Pedido.Cliente))]
         public virtual ICollection<Pedido> Pedidos { get; set; }
